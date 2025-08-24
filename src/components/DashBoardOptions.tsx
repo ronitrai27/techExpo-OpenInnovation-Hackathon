@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { LuVideo, LuCircleFadingPlus } from "react-icons/lu";
+import { LuVideo, LuCircleFadingPlus, LuSearch, LuMailPlus } from "react-icons/lu";
 import { LuStar, LuBookText, LuMessageSquareMore } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/context/ThemeProvider";
@@ -9,10 +9,11 @@ const DashBoardOptions = () => {
   const { darkTheme } = useTheme();
   return (
     <div className="grid grid-cols-2 min-[1080px]:grid-cols-3 gap-6 w-full my-5 min-[1280px]:px-6">
+      {/* First */}
       <div
         className={`${
           darkTheme ? "bg-slate-900 text-white" : "bg-white text-black"
-        } py-3 px-4 rounded-md`}
+        } py-3 px-4 rounded-md shadow`}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-center w-9 h-9 bg-blue-100 rounded-sm">
@@ -41,7 +42,7 @@ const DashBoardOptions = () => {
       <div
         className={`${
           darkTheme ? "bg-slate-900 text-white" : "bg-white text-black"
-        } py-3 px-4 rounded-md`}
+        } py-3 px-4 rounded-md shadow`}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-center w-9 h-9 bg-blue-100 rounded-sm">
@@ -61,14 +62,14 @@ const DashBoardOptions = () => {
         <Button
           className={`py-1 text-sm tracking-tight font-inter w-fit mt-5 bg-blue-600 text-white `}
         >
-          Create Interview <LuCircleFadingPlus />
+          Check Resume <LuSearch />
         </Button>
       </div>
       {/* Third Card */}
       <div
         className={`${
           darkTheme ? "bg-slate-900 text-white" : "bg-white text-black"
-        } py-3 px-4 rounded-md`}
+        } py-3 px-4 rounded-md shadow`}
       >
         <div className="flex ">
           <div className="flex items-center justify-center w-9 h-9 bg-blue-100 rounded-sm">
@@ -85,7 +86,7 @@ const DashBoardOptions = () => {
         <Button
           className={`py-1 text-sm tracking-tight font-inter w-fit mt-5 bg-blue-600 text-white `}
         >
-          Create Interview <LuCircleFadingPlus />
+          Send Mails <LuMailPlus />
         </Button>
       </div>
     </div>

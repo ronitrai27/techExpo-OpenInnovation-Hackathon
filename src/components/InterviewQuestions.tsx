@@ -36,6 +36,9 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { LuListPlus } from "react-icons/lu";
+import { DialogDescription } from "@radix-ui/react-dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LuZap, LuInfinity } from "react-icons/lu";
 
 interface InterviewFormData {
   jobTitle: string;
@@ -66,7 +69,7 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
   formData,
   onCreateLink,
 }) => {
-  const { users } = useUserData();
+  const { users, setRemainingCredits } = useUserData();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
@@ -78,6 +81,7 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
   const [newType, setNewType] =
     useState<InterviewQuestion["type"]>("Technical");
   const [open, setOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(true);
 
   useEffect(() => {
     if (formData) {
@@ -114,6 +118,33 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
 
   const onFinish = async () => {
     setSaveLoading(true);
+    // console.log("onFinish called---------------");
+    // console.log("users email", users?.[0]?.email);
+
+    // get current user credits
+    const { data: userData, error: userError } = await supabase
+      .from("users")
+      .select("remainingCredits")
+      .eq("email", users?.[0]?.email)
+      .single();
+
+    console.log("Fetched userData:", userData);
+    // console.log("userError:", userError);
+
+    if (userError) {
+      setSaveLoading(false);
+      toast("Error fetching user data");
+      return;
+    }
+
+    if (!userData || userData.remainingCredits <= 0) {
+      setSaveLoading(false);
+      setIsDialogOpen(true);
+      toast("No remaining credits!");
+      return;
+    }
+
+    // insert interview
     const { data, error } = await supabase
       .from("interviews")
       .insert([
@@ -126,6 +157,40 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
         },
       ])
       .select();
+
+    // console.log("Inserted interview:", data);
+    // console.log("Interview insert error:", error);
+
+    if (error) {
+      setSaveLoading(false);
+      toast("Error creating interview");
+      return;
+    }
+
+    // decrement credits in DB
+    const { data: updatedUser, error: updateError } = await supabase
+      .from("users")
+      .update({
+        remainingCredits: userData.remainingCredits - 1,
+      })
+      .eq("email", users?.[0]?.email)
+      .select()
+      .single();
+
+    if (!updateError && updatedUser) {
+      // also update context so sidebar reflects immediately
+      setRemainingCredits(updatedUser.remainingCredits);
+    }
+
+    // console.log("Updated user:", updatedUser);
+    // console.log("Update error:", updateError);
+
+    if (updateError) {
+      setSaveLoading(false);
+      toast("Error updating credits");
+      return;
+    }
+
     setSaveLoading(false);
     onCreateLink(interview_id);
     toast("Interview is Ready");
@@ -201,7 +266,10 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
             <div className="flex items-center justify-end mb-3">
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <Button className="mb-4 bg-blue-500 text-white hover:bg-blue-600 cursor-pointer">Add New Question <LuListPlus className="text-white text-xl"/></Button>
+                  <Button className="mb-4 bg-blue-500 text-white hover:bg-blue-600 cursor-pointer">
+                    Add New Question{" "}
+                    <LuListPlus className="text-white text-xl" />
+                  </Button>
                 </DialogTrigger>
 
                 <DialogContent className="sm:max-w-md">
@@ -300,8 +368,66 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
               </Button>
             </div>
           </div>
+
+
         </motion.div>
       )}
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogContent className="p-0 overflow-hidden rounded-2xl max-w-lg">
+        {/* Header */}
+        <DialogHeader className="bg-gradient-to-br from-blue-500 via-indigo-400 to-pink-300 p-6">
+          <DialogTitle className="text-center flex items-center justify-center gap-3 text-white text-2xl font-bold">
+            OOPS! <LuX className="w-6 h-6" />
+          </DialogTitle>
+          <DialogDescription className="text-lg text-gray-100 tracking-wide text-center">
+            Looks like you’ve finished all your credits
+          </DialogDescription>
+        </DialogHeader>
+
+        {/* Body */}
+        <div className="p-6 space-y-6">
+          <h2 className="text-muted-foreground text-center font-medium">
+            To continue making interviews, upgrade your plan now!
+          </h2>
+
+          {/* Plans */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Plan 1 - Small pack */}
+            <Card className="border border-gray-200 shadow-sm hover:shadow-md transition rounded-xl">
+              <CardHeader className="text-center">
+                <LuZap className="mx-auto text-yellow-500 w-8 h-8 mb-2" />
+                <CardTitle className="text-lg font-semibold">5 More Credits</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  Just a quick boost to continue your interviews
+                </p>
+                <p className="text-xl font-bold">₹99</p>
+                <Button className="w-full">Buy Now</Button>
+              </CardContent>
+            </Card>
+
+            {/* Plan 2 - Unlimited */}
+            <Card className="border border-gray-200 shadow-sm hover:shadow-md transition rounded-xl">
+              <CardHeader className="text-center">
+                <LuInfinity className="mx-auto text-pink-500 w-8 h-8 mb-2" />
+                <CardTitle className="text-lg font-semibold">Unlimited Access</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  Get unlimited credits and never worry again
+                </p>
+                <p className="text-xl font-bold">₹499 / month</p>
+                <Button className="w-full bg-gradient-to-r from-pink-500 to-indigo-500 text-white">
+                  Upgrade
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
     </div>
   );
 };

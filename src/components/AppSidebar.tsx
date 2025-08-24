@@ -32,6 +32,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Progress } from "./ui/progress";
+import Link from "next/link";
 
 // Menu items.
 const items = [
@@ -47,7 +49,7 @@ const items = [
   },
   {
     title: "All Interviews",
-    url: "all-interviews",
+    url: "/all-interviews",
     icon: LuBoxes,
   },
   {
@@ -62,9 +64,12 @@ const items = [
   },
 ];
 export function AppSidebar() {
-  const { users } = useUserData();
+  const { users, remainingCredits } = useUserData();
   const path = usePathname();
   const { darkTheme } = useTheme();
+
+  const totalCredits = users?.[0].credits || 0;
+  const progress = (remainingCredits / totalCredits) * 100;
   // console.log("USERS DATA IN APPSIDEBAR", users);
   return (
     <Sidebar>
@@ -80,16 +85,17 @@ export function AppSidebar() {
           </div>
           <div>
             <h2
-            className={clsx(
-              "text-xl font-bold font-sora tracking-tight text-center",
-              darkTheme ? "text-white" : "text-black"
-            )}
-          >
-            VOCALX AI
-          </h2>
-          <p className="text-sm text-gray-500 capitalize font-medium truncate font-inter max-w-[180px]">{users?.[0].organization}</p>
+              className={clsx(
+                "text-xl font-bold font-sora tracking-tight text-center",
+                darkTheme ? "text-white" : "text-black"
+              )}
+            >
+              VOCALX AI
+            </h2>
+            <p className="text-sm text-gray-500 capitalize font-medium truncate font-inter max-w-[180px]">
+              {users?.[0].organization}
+            </p>
           </div>
-          
         </div>
       </SidebarHeader>
       <Separator className="my-3" />
@@ -133,7 +139,7 @@ export function AppSidebar() {
                     asChild
                     className="flex items-center gap-4 mb-2"
                   >
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <div className="w-6 h-6 flex items-center justify-center">
                         <item.icon className="w-full h-full" />
                       </div>
@@ -143,7 +149,7 @@ export function AppSidebar() {
                       >
                         {item.title}
                       </span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -152,6 +158,43 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
+        {/* AD FOR PRO */}
+        <div className="h-[184px] bg-gradient-to-br from-blue-500 to-indigo-200 w-full mb-5 rounded-lg pt-3 pb-1 px-2 relative overflow-hidden">
+          <div className="flex justify-between items-center mb-1 px-3">
+            <span className="text-white font-poppins font-medium text-base">
+              {remainingCredits} left
+            </span>
+            <span className="text-white font-poppins font-medium text-base">
+              {totalCredits}
+            </span>
+          </div>
+
+          <Progress value={progress} className="h-2 rounded-full bg-gray-300">
+            <div
+              className="h-full rounded-full "
+              style={{
+                width: `${progress}%`,
+                backgroundColor: "white",
+              }}
+            ></div>
+          </Progress>
+
+          <div className="w-full">
+            <h3 className="text-white font-poppins font-medium text-base hover:text-black mt-1 cursor-pointer">
+              Get more credits
+            </h3>
+            <h2 className="text-balance mt-5  font-inter font-medium text-black text-base max-w-[140px] leading-tight">
+              {users?.[0].name} you can make {remainingCredits} more Interviews
+            </h2>
+            <Image
+              src="/element2.png"
+              alt="ad"
+              width={350}
+              height={350}
+              className=" absolute -bottom-2 left-20"
+            />
+          </div>
+        </div>
         <div className="flex items-center gap-3 bg-blue-600 rounded-md px-2 py-1 text-white">
           <Image
             src={users?.[0].picture || "/avatar.png"}
@@ -172,8 +215,9 @@ export function AppSidebar() {
             <PopoverTrigger className="">
               <LuChevronsDownUp className="text-xl text-white cursor-pointer" />
             </PopoverTrigger>
-            <PopoverContent className="w-44 "><div>
-              </div></PopoverContent>
+            <PopoverContent className="w-44 ">
+              <div></div>
+            </PopoverContent>
           </Popover>
         </div>
       </SidebarFooter>

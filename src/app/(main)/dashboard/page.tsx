@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useTheme } from "@/context/ThemeProvider";
 import { useUserData } from "@/context/UserDetailContext";
 import { Button } from "@/components/ui/button";
@@ -9,15 +9,28 @@ import DashBoardOptions from "@/components/DashBoardOptions";
 import DasboardRecentInterviews from "@/components/DasboardRecentInterviews";
 import { SheetDemo } from "@/components/DashBoardRightSlider";
 
+
+
 const Page = () => {
   const { darkTheme } = useTheme();
   const { users } = useUserData();
+
   return (
-    <div className={`w-full h-full bg-gray-100 relative`}>
+    <div
+      className={`w-full h-full ${
+        !darkTheme
+          ? "bg-gradient-to-br from-blue-50 to-gray-100"
+          : "bg-gray-200"
+      } relative`}
+    >
       <div className="flex-1">
         <div className="w-full py-4 px-6">
           {/* WELCOM BOX */}
-          <div className={`${darkTheme ? "bg-slate-900 text-white" : "bg-white text-black"} rounded-md flex items-center justify-between relative h-auto max-w-[620px] mx-auto`}>
+          <div
+            className={`${
+              darkTheme ? "bg-slate-800 text-white" : "bg-white text-black"
+            } rounded-md flex items-center justify-between relative h-auto max-w-[620px] mx-auto shadow`}
+          >
             <div className=" flex flex-col justify-evenly h-full py-3 px-4">
               <h1 className="font-semibold text-2xl tracking-tight capitalize font-sora mb-3">
                 Welcome {users?.[0].name}

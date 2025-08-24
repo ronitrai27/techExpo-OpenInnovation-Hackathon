@@ -40,7 +40,7 @@ const InterviewLink = () => {
   useEffect(() => {
     fetchLatestInterview();
   }, []);
-  console.log("interviewData", interviewData);
+  // console.log("interviewData", interviewData);
 
   return (
     <div className="max-w-[800px] mx-auto mt-5 bg-white p-5 flex flex-col items-center justify-center rounded-xl">
@@ -50,7 +50,7 @@ const InterviewLink = () => {
       <h2 className="font-semibold text-xl font-inter mt-2 text-center">
         Your AI interview link is ready
       </h2>
-      <p className="text-center my-3 text-gray-500 font-inter tracking-tight text-lg">
+      <p className="text-center mt-3 mb-6  text-gray-500 font-inter tracking-tight text-lg">
         Share this link below with your candidates to start the interview and
         collect resumes accordingly.
       </p>
@@ -99,7 +99,7 @@ const InterviewLink = () => {
         <h2 className="mt-2 text-xl font-medium font-inter text-center">
           Share Through
         </h2>
-        <div className="flex items-center justify-between gap-5 max-w-[500px] mx-auto mt-6">
+        <div className="grid grid-cols-3 gap-5 max-w-[600px] mx-auto mt-6">
           <Button variant={"outline"} className=" mt-2">
             <LuSend className="mr-2" />
             Watsapp

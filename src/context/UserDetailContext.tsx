@@ -8,6 +8,7 @@ interface DBUser {
   email: string;
   picture: string;
   credits: number;
+  remainingCredits: number;
   organization: string;
   created_at: string;
 }
@@ -18,6 +19,9 @@ interface UserDataContextType {
   loading: boolean;
   isNewUser: boolean;
   constCreateNewUser: () => Promise<void>;
+  //  totalCredits: number;
+  remainingCredits: number;
+  setRemainingCredits: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const UserDataContext = createContext<UserDataContextType | undefined>(
@@ -28,6 +32,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const [users, setUsers] = useState<DBUser[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [isNewUser, setIsNewUser] = useState<boolean>(false);
+  const [remainingCredits, setRemainingCredits] = useState<number>(0);
 
   useEffect(() => {
     constCreateNewUser();
@@ -36,9 +41,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     supabase.auth
       .getUser()
-      .then(async ({ data: { user }}) => {
-       
-
+      .then(async ({ data: { user } }) => {
         if (!user) {
           console.log(" No user found from Supabase auth");
           setLoading(false);
@@ -85,10 +88,8 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
             console.log("🟢 isNewUser set to TRUE");
           }
         } else {
-         
           setUsers(users);
           setIsNewUser(false);
-       
         }
 
         setLoading(false);
@@ -99,9 +100,23 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       });
   };
 
+   useEffect(() => {
+    if (users?.[0]) {
+      setRemainingCredits(users[0].remainingCredits);
+    }
+  }, [users]);
+
   return (
     <UserDataContext.Provider
-      value={{ users, setUsers, loading, isNewUser, constCreateNewUser }}
+      value={{
+        users,
+        setUsers,
+        loading,
+        isNewUser,
+        constCreateNewUser,
+        remainingCredits,
+        setRemainingCredits,
+      }}
     >
       {children}
     </UserDataContext.Provider>
