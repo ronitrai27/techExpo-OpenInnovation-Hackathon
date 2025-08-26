@@ -5,7 +5,7 @@
 import { useUserData } from "@/context/UserDetailContext";
 import { supabase } from "@/services/supabaseClient";
 import React, { useEffect, useState } from "react";
-import { LuVideo } from "react-icons/lu";
+import { LuLoader, LuVideo } from "react-icons/lu";
 import {
   Card,
   CardHeader,
@@ -32,6 +32,7 @@ import { toast } from "sonner";
 const icons = [Briefcase, Clock, FileText, UserCheck, Calendar];
 const DasboardRecentInterviews = () => {
   const [interviewList, setInterviewList] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
   const { users } = useUserData();
   const [view, setView] = useState("grid");
 
@@ -40,15 +41,22 @@ const DasboardRecentInterviews = () => {
   }, [users]);
 
   const GetInterview = async () => {
-    const { data, error } = await supabase
-      .from("interviews")
-      .select("*")
-      .eq("userEmail", users?.[0].email)
-      .order("created_at", { ascending: false });
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("interviews")
+        .select("*")
+        .eq("userEmail", users?.[0].email)
+        .order("created_at", { ascending: false })
+        .limit(3);
 
-    // console.log("interview data raw", data);
-    setInterviewList(data);
-
+      // console.log("interview data raw", data);
+      setInterviewList(data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -86,8 +94,19 @@ const DasboardRecentInterviews = () => {
         </div>
       </div>
 
+      {loading && (
+        <div className="w-full h-full flex items-center justify-center -mt-10">
+          <div className="flex flex-col justify-center items-center mt-20">
+            <LuLoader className="text-xl text-blue-600 animate-spin" />
+            <p className="text-lg font-medium tracking-tight font-inter mt-2 text-gray-500">
+              Loading Interviews
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="w-full flex items-center justify-center">
-        {interviewList?.length == 0 && (
+        {interviewList?.length == 0 && !loading && (
           <div className=" flex flex-col justify-center items-center mt-20">
             <LuVideo className="text-3xl text-blue-600" />
             <p className="text-xl font-medium tracking-tight font-inter mt-2 text-gray-500">
@@ -97,10 +116,10 @@ const DasboardRecentInterviews = () => {
         )}
       </div>
 
-      {interviewList && (
+      {interviewList && !loading && (
         <div
           className={`grid ${
-            view === "grid" ? "grid-cols-3" : "grid-cols-1"
+            view === "grid" ? "grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
           } gap-4 mt-10`}
         >
           {interviewList?.map((item: any, index: number) => {

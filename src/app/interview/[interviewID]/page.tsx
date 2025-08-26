@@ -12,10 +12,10 @@ import { LuClock2, LuMoveRight } from "react-icons/lu";
 import { toast } from "sonner";
 import { useInterview } from "@/context/interviewContext";
 import { set } from "zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, UploadCloud } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-import { Separator } from "@/components/ui/separator"
+import { Separator } from "@/components/ui/separator";
 
 const Interview = () => {
   const { interviewID } = useParams();
@@ -27,6 +27,51 @@ const Interview = () => {
   const [userEmail, setUserEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [wrongId, setWrongId] = useState<boolean>(false);
+
+  // --- FILE PDF
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
+  const [uploaded, setUploaded] = useState(false);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const uploadResume = async () => {
+    if (!file) return;
+    setUploading(true);
+
+    const now = new Date();
+    const timestamp = `${now.getFullYear()}-${
+      now.getMonth() + 1
+    }-${now.getDate()}_${now.getHours()}-${now.getMinutes()}`;
+
+    const filePath = `${timestamp}/resume.pdf`;
+
+    const { error } = await supabase.storage
+      .from("resume")
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+
+    if (error) {
+      console.error("Upload error:", error.message);
+    } else {
+      // Get public URL
+      const { data } = supabase.storage.from("resume").getPublicUrl(filePath);
+      setResumeUrl(data.publicUrl);
+      toast.success("Resume uploaded successfully!");
+      setUploaded(true);
+      // console.log("Resume URL:", data.publicUrl);
+    }
+
+    setUploading(false);
+  };
+  // -----------------------
 
   useEffect(() => {
     interviewID && GetInterviewDetails();
@@ -67,13 +112,16 @@ const Interview = () => {
 
     if (interviews) {
       setInterviewInfo({
-        userName: userName, 
+        userName: userName,
         userEmail: userEmail,
         jobTitle: interviews[0].jobTitle,
         jobPosition: interviews[0].jobDescription,
         interviewDuration: interviews[0].interviewDuration,
         interviewData: interviews[0].questionList,
         interviewID: interviewID,
+        acceptResume: interviews[0].acceptResume,
+        organization: interviews[0].organization,
+        resumeURL: resumeUrl
       });
 
       router.push(`/interview/${interviewID}/start`);
@@ -113,16 +161,16 @@ const Interview = () => {
           />
           <div className="">
             <p className="text-center text-xl font-semibold tracking-tight font-inter capitalize">
-            {interviewDetails?.jobTitle || "Collecting Information..."}
+              {interviewDetails?.jobTitle || "Collecting Information..."}
             </p>
             <h2 className="text-center text-lg font-semibold tracking-tight font-inter">
-             {interviewDetails?.organization}
+              {interviewDetails?.organization}
             </h2>
 
             <p className="mt-3 text-center text-base font-inter flex items-center justify-center gap-3 mb-2">
-               Duration:   
+              Duration:
               <LuClock2 />
-           {interviewDetails?.interviewDuration} minutes
+              {interviewDetails?.interviewDuration} minutes
             </p>
 
             <Separator className="my-4" />
@@ -147,9 +195,30 @@ const Interview = () => {
                 />
               </div>
 
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-2 items-center mt-1">
                 <Label>Resume:</Label>
-                <Input type="file" className="w-[320px] ml-auto mt-1 bg-white" />
+                <Input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={handleFileChange}
+                  className="w-[200px] ml-auto  bg-white -mr-5"
+                />
+                <Button
+                  variant="outline"
+                  className="ml-auto cursor-pointer"
+                  onClick={uploadResume}
+                  disabled={uploading}
+                >
+                  {uploading ? (
+                    <>
+                      Uploading <Loader2 className="ml-2 animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      Upload <UploadCloud className="ml-2" />
+                    </>
+                  )}
+                </Button>
               </div>
             </div>
 
@@ -163,7 +232,7 @@ const Interview = () => {
             <div className="w-full flex items-center justify-center mt-4">
               <Button
                 className=""
-                disabled={loading || !userName || !userEmail}
+                disabled={loading || !userName || !userEmail || !uploaded}
                 onClick={() => onJoinInterview()}
               >
                 {loading && <Loader2 className="mr-2  animate-spin" />} Join

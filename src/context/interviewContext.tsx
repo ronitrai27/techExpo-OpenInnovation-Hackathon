@@ -3,7 +3,7 @@
 
     import { createContext, useContext, useState, ReactNode } from "react";
 
-    // 1. Define type for context
+
     type InterviewContextType = {
     interviewInfo: any;
     setInterviewInfo: (info: any) => void;

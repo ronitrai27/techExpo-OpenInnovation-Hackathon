@@ -81,7 +81,7 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
   const [newType, setNewType] =
     useState<InterviewQuestion["type"]>("Technical");
   const [open, setOpen] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     if (formData) {
@@ -368,66 +368,68 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
               </Button>
             </div>
           </div>
-
-
         </motion.div>
       )}
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogContent className="p-0 overflow-hidden rounded-2xl max-w-lg">
-        {/* Header */}
-        <DialogHeader className="bg-gradient-to-br from-blue-500 via-indigo-400 to-pink-300 p-6">
-          <DialogTitle className="text-center flex items-center justify-center gap-3 text-white text-2xl font-bold">
-            OOPS! <LuX className="w-6 h-6" />
-          </DialogTitle>
-          <DialogDescription className="text-lg text-gray-100 tracking-wide text-center">
-            Looks like you’ve finished all your credits
-          </DialogDescription>
-        </DialogHeader>
+        <DialogContent className="p-0 overflow-hidden rounded-2xl max-w-lg">
+          {/* Header */}
+          <DialogHeader className="bg-gradient-to-br from-blue-500 via-indigo-400 to-pink-300 p-6">
+            <DialogTitle className="text-center flex items-center justify-center gap-3 text-white text-2xl font-bold">
+              OOPS! <LuX className="w-6 h-6" />
+            </DialogTitle>
+            <DialogDescription className="text-lg text-gray-100 tracking-wide text-center">
+              Looks like you’ve finished all your credits
+            </DialogDescription>
+          </DialogHeader>
 
-        {/* Body */}
-        <div className="p-6 space-y-6">
-          <h2 className="text-muted-foreground text-center font-medium">
-            To continue making interviews, upgrade your plan now!
-          </h2>
+          {/* Body */}
+          <div className="p-6 space-y-6">
+            <h2 className="text-muted-foreground text-center font-medium">
+              To continue making interviews, upgrade your plan now!
+            </h2>
 
-          {/* Plans */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Plan 1 - Small pack */}
-            <Card className="border border-gray-200 shadow-sm hover:shadow-md transition rounded-xl">
-              <CardHeader className="text-center">
-                <LuZap className="mx-auto text-yellow-500 w-8 h-8 mb-2" />
-                <CardTitle className="text-lg font-semibold">5 More Credits</CardTitle>
-              </CardHeader>
-              <CardContent className="text-center space-y-3">
-                <p className="text-sm text-muted-foreground">
-                  Just a quick boost to continue your interviews
-                </p>
-                <p className="text-xl font-bold">₹99</p>
-                <Button className="w-full">Buy Now</Button>
-              </CardContent>
-            </Card>
+            {/* Plans */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Plan 1 - Small pack */}
+              <Card className="border border-gray-200 shadow-sm hover:shadow-md transition rounded-xl">
+                <CardHeader className="text-center">
+                  <LuZap className="mx-auto text-yellow-500 w-8 h-8 mb-2" />
+                  <CardTitle className="text-lg font-semibold">
+                    5 More Credits
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-center space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    Just a quick boost to continue your interviews
+                  </p>
+                  <p className="text-xl font-bold">₹99</p>
+                  <Button className="w-full">Buy Now</Button>
+                </CardContent>
+              </Card>
 
-            {/* Plan 2 - Unlimited */}
-            <Card className="border border-gray-200 shadow-sm hover:shadow-md transition rounded-xl">
-              <CardHeader className="text-center">
-                <LuInfinity className="mx-auto text-pink-500 w-8 h-8 mb-2" />
-                <CardTitle className="text-lg font-semibold">Unlimited Access</CardTitle>
-              </CardHeader>
-              <CardContent className="text-center space-y-3">
-                <p className="text-sm text-muted-foreground">
-                  Get unlimited credits and never worry again
-                </p>
-                <p className="text-xl font-bold">₹499 / month</p>
-                <Button className="w-full bg-gradient-to-r from-pink-500 to-indigo-500 text-white">
-                  Upgrade
-                </Button>
-              </CardContent>
-            </Card>
+              {/* Plan 2 - Unlimited */}
+              <Card className="border border-gray-200 shadow-sm hover:shadow-md transition rounded-xl">
+                <CardHeader className="text-center">
+                  <LuInfinity className="mx-auto text-pink-500 w-8 h-8 mb-2" />
+                  <CardTitle className="text-lg font-semibold">
+                    Unlimited Access
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-center space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    Get unlimited credits and never worry again
+                  </p>
+                  <p className="text-xl font-bold">₹499 / month</p>
+                  <Button className="w-full bg-gradient-to-r from-pink-500 to-indigo-500 text-white">
+                    Upgrade
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

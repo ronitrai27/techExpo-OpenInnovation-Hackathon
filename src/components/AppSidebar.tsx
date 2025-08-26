@@ -44,7 +44,7 @@ const items = [
   },
   {
     title: "Scheduled",
-    url: "scheduled",
+    url: "/scheduled",
     icon: LuCalendarDays,
   },
   {
@@ -74,7 +74,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="">
-        <div className="flex items-center justify-center gap-4 ">
+        <div className="flex items-center justify-center gap-7">
           <div
             className={clsx(
               "w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg font-inter",
@@ -90,7 +90,7 @@ export function AppSidebar() {
                 darkTheme ? "text-white" : "text-black"
               )}
             >
-              VOCALX AI
+              VOCALX
             </h2>
             <p className="text-sm text-gray-500 capitalize font-medium truncate font-inter max-w-[180px]">
               {users?.[0].organization}
@@ -109,15 +109,17 @@ export function AppSidebar() {
           >
             New Interview
           </SidebarGroupLabel>
-          <Button
-            className={clsx(
-              "mt-2 font-inter flex items-center gap-4",
-              darkTheme ? "bg-blue-600 text-white" : "bg-gray-900 text-white"
-            )}
-          >
-            <LuCircleFadingPlus className="" />
-            Create New Interview
-          </Button>
+          <Link href="/dashboard/create-interview" className="w-full mx-auto">
+            <Button
+              className={clsx(
+                "mt-2 font-inter flex items-center gap-4 cursor-pointer mx-auto w-full",
+                darkTheme ? "bg-blue-600 text-white" : "bg-gray-900 text-white"
+              )}
+            >
+              <LuCircleFadingPlus className="" />
+              Create New Interview
+            </Button>{" "}
+          </Link>
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel

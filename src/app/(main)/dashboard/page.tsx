@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useRef,useEffect, useState } from "react";
 import { useTheme } from "@/context/ThemeProvider";
 import { useUserData } from "@/context/UserDetailContext";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,8 @@ import DashBoardOptions from "@/components/DashBoardOptions";
 import DasboardRecentInterviews from "@/components/DasboardRecentInterviews";
 import { SheetDemo } from "@/components/DashBoardRightSlider";
 
-
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import ScreenSizeBlocker from "@/components/ScreenBlocker";
 
 const Page = () => {
   const { darkTheme } = useTheme();
@@ -58,6 +59,8 @@ const Page = () => {
         </div>
       </div>
       <SheetDemo />
+
+      <ScreenSizeBlocker/>
     </div>
   );
 };

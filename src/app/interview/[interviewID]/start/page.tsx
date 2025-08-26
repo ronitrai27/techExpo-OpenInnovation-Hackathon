@@ -41,6 +41,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { supabase } from "@/services/supabaseClient";
+import { fi } from "zod/v4/locales";
 
 const VAPI_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY;
 
@@ -67,6 +68,7 @@ const StartInterview = () => {
   const [isCallActive, setIsCallActive] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [conversation, setConversation] = useState<string>("");
+  const [generateLoading, setGenerateLoading] = useState<boolean>(false);
 
   const [vapi] = useState(() => new Vapi(VAPI_PUBLIC_KEY));
 
@@ -271,14 +273,12 @@ Ensure the interview remains focused on React
 
   // messages to pass to feedback
   const GenerateFeedback = async () => {
+    setGenerateLoading(true);
     try {
       const res = await axios.post("/api/ai-feedback", {
-        conversation: messages,
+        conversation: demoConversation,
       });
-      console.log("✅ Feedback Result From GROQ LLM:", res.data);
-      // console.log("recomendation----------",res.data.feedback.recommendation);
-      // saving to db
-      //  JSON.stringify(res.data),
+      console.log("Feedback Result From GROQ LLM:", res.data);
       const { data, error } = await supabase
         .from("interview-details")
         .insert([
@@ -288,12 +288,17 @@ Ensure the interview remains focused on React
             interview_id: interviewInfo?.interviewID,
             feedback: res.data,
             recomended: "No",
+            acceptResume: interviewInfo?.acceptResume,
+            organization: interviewInfo?.organization,
+            resumeURL: interviewInfo?.resumeURL,
           },
         ])
         .select();
       console.log("✅ Interview Details:", data);
     } catch (err) {
       console.error("❌ Test Feedback Error:", err);
+    }finally {
+      setGenerateLoading(false);
     }
   };
 
@@ -370,14 +375,16 @@ Ensure the interview remains focused on React
   //   -----------------------------
   return (
     <div className="relative mt-14 p-6 h-[calc(100vh-56px)]">
-      <div className="flex items-center justify-between max-w-[800px] mx-auto">
+      <div className="flex items-center justify-between max-w-[900px] mx-auto">
         <h2 className="text-xl font-semibold  font-inter">
           AI INTERVIEW SESSION
         </h2>
+        <p className="text-base tracking-tight font-semibold text-blue-500 max-w-[300px] mx-auto text-center">
+          Important Notice: This feature has been stopped by the creater !!
+        </p>
         <p className="text-xl flex items-center gap-3 font-semibold">
           <Timer /> {formatTime(seconds)}
         </p>
-        {/* <button onClick={GenerateFeedback}>Test AI Feedback</button> */}
       </div>
 
       <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 justify-items-center bg-gray-50 py-12 px-4 mt-6">
@@ -444,9 +451,9 @@ Ensure the interview remains focused on React
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+        {/* TESTIG ONLY--------------------- */}
+         <Button className="text-base font-medium cursor-pointer" variant="outline" onClick={GenerateFeedback}>{generateLoading ? "Generating..." : "Generate Feedback (full stack)"}</Button>
       </div>
-
-      {/* {vapiError && <p className="absolute bottom-10 left-1/2 text-base text-muted-foreground font-inter w-full tracking-wide">{vapiError}</p>} */}
 
       <div className="absolute bottom-7 left-1/2 transform -translate-x-1/2">
         {caption && (
@@ -496,8 +503,7 @@ Ensure the interview remains focused on React
                 Close
               </Button>
               <Button
-                // onClick={() => setIsDialogOpen(false)}
-                className="w-full  font-medium  "
+                className="w-full  font-medium "
               >
                 Explore <SearchCheck />
               </Button>

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
+import { useUserData } from "@/context/UserDetailContext";
+import { supabase } from "@/services/supabaseClient";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,10 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useTheme } from "@/context/ThemeProvider";
-import { useUserData } from "@/context/UserDetailContext";
-import { supabase } from "@/services/supabaseClient";
-import { Copy } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { Copy, LucideLoader2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   Briefcase,
@@ -26,29 +25,52 @@ import {
   List,
   Filter,
 } from "lucide-react";
-import { LuVideo } from "react-icons/lu";
+import { LuActivity, LuLoader, LuVideo } from "react-icons/lu";
+import Image from "next/image";
+import Link from "next/link";
 
 const icons = [Briefcase, Clock, FileText, UserCheck, Calendar];
 
-const AllInterview = () => {
-  const { darkTheme } = useTheme();
+const ScheduledInterview = () => {
   const { users } = useUserData();
+  const { darkTheme } = useTheme();
+  const [loading, setLoading] = useState(false);
   const [interviewList, setInterviewList] = useState<any>([]);
   const [view, setView] = useState("grid");
 
   useEffect(() => {
     users && GetInterviewList();
   }, [users]);
-
+  // we we have connect 2 tables interviews , interview-details using FK;
   const GetInterviewList = async () => {
-    const { data, error } = await supabase
-      .from("interviews")
-      .select("*")
-      .eq("userEmail", users?.[0].email);
-
-         setInterviewList(data);
+    setLoading(true);
+    try {
+      const result = await supabase
+        .from("interviews")
+        .select(
+          "jobTitle, jobDescription, interview_id, interview-details(userEmail)"
+        )
+        .eq("userEmail", users?.[0].email)
+        .order("created_at", { ascending: false });
+      console.log("interview data raw", result.data);
+      setInterviewList(result.data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  if (loading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100">
+        <div className="flex items-center gap-2">
+          <LucideLoader2 className="animate-spin" size={32} />
+          <h2 className="text-2xl">Loading Contents...</h2>
+        </div>
+      </div>
+    );
+  }
   return (
     <div
       className={`w-full h-full p-6 ${
@@ -58,9 +80,34 @@ const AllInterview = () => {
       } relative`}
     >
       <div className="">
-        <div className=" flex items-center justify-between">
+        <div
+          className={`${
+            darkTheme ? "bg-slate-800 text-white" : "bg-white text-black"
+          } rounded-md flex items-center justify-between relative h-auto max-w-[620px] mx-auto shadow`}
+        >
+          <div className=" flex flex-col justify-evenly h-full py-3 px-4">
+            <h1 className="font-semibold text-2xl tracking-tight capitalize font-sora mb-3">
+              Welcome {users?.[0].name}
+            </h1>
+            <p className="font-inter text-base font-medium max-w-[400px]">
+              Welcome to your Scheduled interview pannel.check all the deatil of
+              candidates and their given interviews.
+            </p>
+            <Button className="py-1 text-sm tracking-tight font-inter w-fit mt-5 bg-blue-500 text-white">
+              View{" "}
+            </Button>
+          </div>
+          <Image
+            src="/partnership.png"
+            width={180}
+            height={180}
+            alt="welcome"
+            className="object-cover"
+          />
+        </div>
+        <div className=" flex items-center justify-between mt-5">
           <h2 className="font-semibold text-2xl font-inter capitalize ml-5">
-          Interviews
+            Scheduled Interviews
           </h2>
           <div className="flex items-center gap-5 mr-10">
             <div className="space-x-2 bg-white p-2 rounded-md flex">
@@ -81,11 +128,6 @@ const AllInterview = () => {
               >
                 <List className="w-4 h-4" />
               </Button>
-            </div>
-
-            <div className="flex items-center gap-3 bg-white p-2 rounded-md">
-              <Filter />
-              <p>Filters</p>
             </div>
           </div>
         </div>
@@ -113,12 +155,10 @@ const AllInterview = () => {
               return (
                 <Card
                   key={item.interview_id}
-                  className="bg-white border rounded-lg shadow-sm hover:shadow-md transition p-3"
+                  className="bg-white border rounded-lg shadow-sm hover:shadow-md transition px-3 py-4"
                 >
                   <CardHeader className="flex flex-row items-center justify-between">
-                    <div className="p-2 rounded-md bg-gray-100">
-                      <Icon className="w-5 h-5 text-blue-500" />
-                    </div>
+                    <div className="p-2 rounded-full bg-blue-500 animate-pulse"></div>
                     <CardTitle className="font-medium text-lg text-black font-sora">
                       {item.jobTitle}
                     </CardTitle>
@@ -126,33 +166,22 @@ const AllInterview = () => {
 
                   <CardContent className="text-sm text-muted-foreground text-center font-inter space-y-2">
                     <p className="line-clamp-2">{item.jobDescription}</p>
-                    <div className="flex items-center justify-start text-base mt-3 text-gray-500">
-                      <span>⏱ {item.interviewDuration} mins</span>
-                      {/* <span>📌 {item.interviewType}</span> */}
+
+                    <div className="flex items-center gap-4 justify-end my-1">
+                      <div className="rounded-full bg-green-500 w-3 h-3 "></div>
+                      <p>Candidates {item["interview-details"].length}</p>
                     </div>
                   </CardContent>
 
                   <CardFooter className="flex justify-center gap-6">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const url = `${window.location.origin}/interview/${item.interview_id}`;
-                        navigator.clipboard.writeText(url);
-                        toast.success("Link copied to clipboard");
-                      }}
-                      className="border-gray-300 text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
-                      Copy Link <Copy className="ml-2 w-4 h-4" />
-                    </Button>
-
-                    <Button
-                      size="sm"
-                      className=" bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => {}}
-                    >
-                      Send <Send className="ml-2 w-4 h-4" />
-                    </Button>
+                    <Link href={`/scheduled/${item.interview_id}/details`}>
+                      <Button
+                        className="font-inter text-sm cursor-pointer"
+                        variant="outline"
+                      >
+                        View Details <LuActivity />
+                      </Button>{" "}
+                    </Link>
                   </CardFooter>
                 </Card>
               );
@@ -174,4 +203,4 @@ const AllInterview = () => {
   );
 };
 
-export default AllInterview;
+export default ScheduledInterview;
