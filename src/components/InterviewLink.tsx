@@ -71,7 +71,7 @@ const InterviewLink = () => {
             // }
             value={
               interviewData
-                ? `https://ai-voice-app-five.vercel.app/${interviewData.interview_id}`
+                ? `https://ai-voice-app-five.vercel.app/interview/${interviewData.interview_id}`
                 : "Loading..."
             }
             readOnly
