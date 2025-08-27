@@ -8,12 +8,12 @@ import { toast } from "react-hot-toast";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { Button } from "@/components/ui/button";
 const Login = () => {
-
-   const handleLogin = async (provider: "google" | "discord") => {
+  const handleLogin = async (provider: "google" | "discord") => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        // redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
       },
     });
 
@@ -22,7 +22,6 @@ const Login = () => {
       toast.error(error.message);
     }
   };
-
 
   return (
     <div
@@ -48,11 +47,12 @@ const Login = () => {
       {/* animate-moving-gradient */}
       <div className="flex flex-col items-center justify-center relative z-10 ">
         <div className="text-sm px-6 text-gray-800 font-medium flex items-center justify-center gap-3 py-1 border-2 border-yellow-500 rounded-full mb-20 ">
-          Try it for Free <BsStars className="inline-flex text-yellow-400 text-xl" />
+          Try it for Free{" "}
+          <BsStars className="inline-flex text-yellow-400 text-xl" />
         </div>
 
         <h1 className="font-extrabold text-5xl md:text-6xl font-sora tracking-tight mb-3">
-          VOCALX 
+          VOCALX
         </h1>
 
         <h2 className=" text-2xl md:text-4xl font-sora font-semibold tracking-tight text-center w-full md:max-w-[700px] mx-auto  leading-tight max-[600px]:px-4 max-[650px]:mt-3">
@@ -81,14 +81,22 @@ const Login = () => {
         </p>
 
         <div className="flex max-[650px]:flex-col items-center justify-center gap-5">
-          <Button onClick={() => handleLogin("google")} variant="outline" className="py-5 shadow-md cursor-pointer">
+          <Button
+            onClick={() => handleLogin("google")}
+            variant="outline"
+            className="py-5 shadow-md cursor-pointer"
+          >
             <span className="flex items-center justify-between gap-5 font-inter text-black tracking-tight">
               <Image src="/google.png" alt="Google" width={25} height={25} />
               Continue with Google
             </span>
           </Button>
 
-          <Button onClick={() => handleLogin("discord")} variant="outline" className="py-5 shadow-md cursor-pointer">
+          <Button
+            onClick={() => handleLogin("discord")}
+            variant="outline"
+            className="py-5 shadow-md cursor-pointer"
+          >
             <span className="flex items-center justify-between gap-5 font-inter text-black tracking-tight">
               <Image src="/discord.png" alt="Google" width={25} height={25} />
               Continue with Discord
