@@ -72,9 +72,9 @@ const StartInterview = () => {
 
   const [vapi] = useState(() => new Vapi(VAPI_PUBLIC_KEY));
 
-  useEffect(() => {
-    interviewInfo && startCall();
-  }, [interviewInfo]);
+  // useEffect(() => {
+  //   interviewInfo && startCall();
+  // }, [interviewInfo]);
 
   const startCall = async () => {
     let questionList = "";
@@ -386,9 +386,9 @@ Ensure the interview remains focused on React
         <h2 className="text-xl font-semibold  font-inter">
           AI INTERVIEW SESSION
         </h2>
-        {/* <p className="text-base tracking-tight font-semibold text-blue-500 max-w-[300px] mx-auto text-center">
+        <p className="text-base font-inter tracking-tight font-semibold text-blue-500 max-w-[300px] mx-auto text-center">
           Important Notice: This feature has been stopped by the creater !!
-        </p> */}
+        </p>
         <p className="text-xl flex items-center gap-3 font-semibold">
           <Timer /> {formatTime(seconds)}
         </p>
