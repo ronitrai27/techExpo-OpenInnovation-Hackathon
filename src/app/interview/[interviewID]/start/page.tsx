@@ -72,9 +72,9 @@ const StartInterview = () => {
 
   const [vapi] = useState(() => new Vapi(VAPI_PUBLIC_KEY));
 
-  // useEffect(() => {
-  //   interviewInfo && startCall();
-  // }, [interviewInfo]);
+  useEffect(() => {
+    interviewInfo && startCall();
+  }, [interviewInfo]);
 
   const startCall = async () => {
     let questionList = "";
@@ -276,7 +276,7 @@ Ensure the interview remains focused on React
     setGenerateLoading(true);
     try {
       const res = await axios.post("/api/ai-feedback", {
-        conversation: demoConversation,
+        conversation: messages,
       });
       console.log("Feedback Result From GROQ LLM:", res.data);
       const { data, error } = await supabase
