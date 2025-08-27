@@ -121,7 +121,7 @@ const Interview = () => {
         interviewID: interviewID,
         acceptResume: interviews[0].acceptResume,
         organization: interviews[0].organization,
-        resumeURL: resumeUrl
+        resumeURL: resumeUrl,
       });
 
       router.push(`/interview/${interviewID}/start`);
@@ -195,31 +195,33 @@ const Interview = () => {
                 />
               </div>
 
-              <div className="flex gap-2 items-center mt-1">
-                <Label>Resume:</Label>
-                <Input
-                  type="file"
-                  accept="application/pdf"
-                  onChange={handleFileChange}
-                  className="w-[200px] ml-auto  bg-white -mr-5"
-                />
-                <Button
-                  variant="outline"
-                  className="ml-auto cursor-pointer"
-                  onClick={uploadResume}
-                  disabled={uploading}
-                >
-                  {uploading ? (
-                    <>
-                      Uploading <Loader2 className="ml-2 animate-spin" />
-                    </>
-                  ) : (
-                    <>
-                      Upload <UploadCloud className="ml-2" />
-                    </>
-                  )}
-                </Button>
-              </div>
+              {interviewDetails?.acceptResume && (
+                <div className="flex gap-2 items-center mt-1">
+                  <Label>Resume:</Label>
+                  <Input
+                    type="file"
+                    accept="application/pdf"
+                    onChange={handleFileChange}
+                    className="w-[200px] ml-auto  bg-white -mr-5"
+                  />
+                  <Button
+                    variant="outline"
+                    className="ml-auto cursor-pointer"
+                    onClick={uploadResume}
+                    disabled={uploading}
+                  >
+                    {uploading ? (
+                      <>
+                        Uploading <Loader2 className="ml-2 animate-spin" />
+                      </>
+                    ) : (
+                      <>
+                        Upload <UploadCloud className="ml-2" />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
             </div>
 
             <div className="bg-gradient-to-br from-blue-100 to-sky-100 border border-blue-400 rounded-md p-3 mt-8">

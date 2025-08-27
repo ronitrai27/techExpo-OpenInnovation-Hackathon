@@ -35,7 +35,7 @@ Conversation between Assistant and User:
 Based on the above interview conversation, provide structured feedback.
 
 Your task:
-- Rate technicalSkills, communication, problemSolving, and experience (0–10 scale).
+- Rate technicalSkills, communication, problemSolving, and experience (0-10 scale).
 - Provide a concise summary in 3 lines.
 - Provide a recommendation (Yes/No) and a recommendationMessage.
 

@@ -295,6 +295,13 @@ Ensure the interview remains focused on React
         ])
         .select();
       console.log("✅ Interview Details:", data);
+      toast.success("Feedback Generated Successfully", {
+        description: (
+          <span className="text-sm text-gray-500 font-medium">
+            Feedback Generated Successfully!{" "}
+          </span>
+        ),
+      })
     } catch (err) {
       console.error("❌ Test Feedback Error:", err);
     }finally {
@@ -358,17 +365,17 @@ Ensure the interview remains focused on React
     {
       type: "user",
       content:
-        "I have 0 knowledge of backend , i only use nextjs for full stack",
+        "Yes i worked with node , express , flask and even supabase.",
     },
-    { type: "assistant", content: "Thats fine renit" },
+    { type: "assistant", content: "Great, tell me something bout your projects?" },
     {
       type: "assistant",
-      content: "Tell me any third party packages you have worked with",
+      content: "Tell me any third party packages you have worked with in your project",
     },
     {
       type: "user",
       content:
-        "yes but not many, im still learning the advance concepts and also trying to work with third party packages",
+        "yes, i created a neuratwin web app,  that uses openai api to generate text, langchain , mongodb , vapi ai for voice assistants, and sync with googpe calenders.",
     },
   ];
 

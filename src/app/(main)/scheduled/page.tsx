@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useTheme } from "@/context/ThemeProvider";
-import { Copy, LucideLoader2 } from "lucide-react";
+import { Copy, LucideLoader, LucideLoader2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   Briefcase,
@@ -65,7 +65,7 @@ const ScheduledInterview = () => {
     return (
       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100">
         <div className="flex items-center gap-2">
-          <LucideLoader2 className="animate-spin" size={32} />
+          <LucideLoader className="animate-spin" size={32} />
           <h2 className="text-2xl">Loading Contents...</h2>
         </div>
       </div>

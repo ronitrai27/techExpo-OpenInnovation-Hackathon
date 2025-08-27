@@ -11,10 +11,18 @@ import { SheetDemo } from "@/components/DashBoardRightSlider";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import ScreenSizeBlocker from "@/components/ScreenBlocker";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const { darkTheme } = useTheme();
-  const { users } = useUserData();
+  const { users, loading } = useUserData();
+  const router = useRouter();
+
+  // useEffect(()=>{
+  //   if(!users && !loading){
+  //     router.push("/auth")
+  //   }
+  // }, [users])
 
   return (
     <div

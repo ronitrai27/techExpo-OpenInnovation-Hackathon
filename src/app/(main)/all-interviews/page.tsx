@@ -12,7 +12,7 @@ import {
 import { useTheme } from "@/context/ThemeProvider";
 import { useUserData } from "@/context/UserDetailContext";
 import { supabase } from "@/services/supabaseClient";
-import { Copy } from "lucide-react";
+import { Archive, Copy } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -104,7 +104,7 @@ const AllInterview = () => {
         {interviewList && (
           <div
             className={`grid ${
-              view === "grid" ? "grid-cols-3" : "grid-cols-1"
+              view === "grid" ? "grid-cols-2 min-[1220px]:grid-cols-3" : "grid-cols-1"
             } gap-4 mt-10`}
           >
             {interviewList?.map((item: any, index: number) => {
@@ -146,12 +146,21 @@ const AllInterview = () => {
                       Copy Link <Copy className="ml-2 w-4 h-4" />
                     </Button>
 
-                    <Button
+                    {/* <Button
                       size="sm"
                       className=" bg-blue-600 hover:bg-blue-700 text-white"
                       onClick={() => {}}
                     >
                       Send <Send className="ml-2 w-4 h-4" />
+                    </Button> */}
+
+                     <Button
+                      size="sm"
+                      variant="destructive"
+                      className=""
+                      onClick={() => {}}
+                    >
+                      Archive <Archive className="ml-2 w-4 h-4" />
                     </Button>
                   </CardFooter>
                 </Card>
