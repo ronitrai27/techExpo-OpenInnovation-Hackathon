@@ -386,9 +386,9 @@ Ensure the interview remains focused on React
         <h2 className="text-xl font-semibold  font-inter">
           AI INTERVIEW SESSION
         </h2>
-        <p className="text-base tracking-tight font-semibold text-blue-500 max-w-[300px] mx-auto text-center">
+        {/* <p className="text-base tracking-tight font-semibold text-blue-500 max-w-[300px] mx-auto text-center">
           Important Notice: This feature has been stopped by the creater !!
-        </p>
+        </p> */}
         <p className="text-xl flex items-center gap-3 font-semibold">
           <Timer /> {formatTime(seconds)}
         </p>
@@ -459,7 +459,7 @@ Ensure the interview remains focused on React
           </AlertDialogContent>
         </AlertDialog>
         {/* TESTIG ONLY--------------------- */}
-         <Button className="text-base font-medium cursor-pointer" variant="outline" onClick={GenerateFeedback}>{generateLoading ? "Generating..." : "Generate Feedback (full stack)"}</Button>
+         {/* <Button className="text-base font-medium cursor-pointer" variant="outline" onClick={GenerateFeedback}>{generateLoading ? "Generating..." : "Generate Feedback (full stack)"}</Button> */}
       </div>
 
       <div className="absolute bottom-7 left-1/2 transform -translate-x-1/2">
