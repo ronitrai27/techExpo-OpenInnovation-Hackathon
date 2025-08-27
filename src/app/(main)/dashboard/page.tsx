@@ -18,12 +18,6 @@ const Page = () => {
   const { users, loading } = useUserData();
   const router = useRouter();
 
-  // useEffect(()=>{
-  //   if(!users && !loading){
-  //     router.push("/auth")
-  //   }
-  // }, [users])
-
   return (
     <div
       className={`w-full h-full ${

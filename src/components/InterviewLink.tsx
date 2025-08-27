@@ -64,9 +64,14 @@ const InterviewLink = () => {
         </div>
         <div className="flex items-center justify-between gap-20 mt-5">
           <Input
+            // value={
+            //   interviewData
+            //     ? `${process.env.NEXT_PUBLIC_HOST_URL}/${interviewData.interview_id}`
+            //     : "Loading..."
+            // }
             value={
               interviewData
-                ? `${process.env.NEXT_PUBLIC_HOST_URL}/${interviewData.interview_id}`
+                ? `https://ai-voice-app-five.vercel.app/${interviewData.interview_id}`
                 : "Loading..."
             }
             readOnly
@@ -89,9 +94,11 @@ const InterviewLink = () => {
       </div>
       <Separator className="my-5" />
       <div className="flex items-center justify-baseline w-full gap-6">
-        <p className="text-gray-500 font-inter">Duration: {interviewData?.interviewDuration}  min</p>
+        <p className="text-gray-500 font-inter">
+          Duration: {interviewData?.interviewDuration} min
+        </p>
         <p className="text-gray-500 font-inter capitalize">
-        {interviewData?.jobTitle}
+          {interviewData?.jobTitle}
         </p>
       </div>
 

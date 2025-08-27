@@ -8,18 +8,34 @@ import { toast } from "react-hot-toast";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { Button } from "@/components/ui/button";
 const Login = () => {
+  // const handleLogin = async (provider: "google" | "discord") => {
+  //   const { error } = await supabase.auth.signInWithOAuth({
+  //     provider,
+  //     options: {
+  //       // redirectTo: `${window.location.origin}/auth/callback`,
+  //       redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+  //     },
+  //   });
+
+  //   if (error) {
+  //     console.error("Login error:", error.message);
+  //     toast.error(error.message);
+  //   }
+  // };
+
   const handleLogin = async (provider: "google" | "discord") => {
+    const redirectUrl = process.env.NEXT_PUBLIC_SITE_URL + "/auth/callback";
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        // redirectTo: `${window.location.origin}/auth/callback`,
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+        redirectTo: redirectUrl,
       },
     });
 
     if (error) {
-      console.error("Login error:", error.message);
       toast.error(error.message);
+      console.error(error);
     }
   };
 
