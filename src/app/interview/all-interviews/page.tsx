@@ -3,9 +3,8 @@ import { Button } from "@/components/ui/button";
 import { useUserData } from "@/context/UserDetailContext";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { LuBookOpenCheck, LuCheck, LuInbox, LuWorkflow } from "react-icons/lu";
+import { LuBookOpenCheck, LuCheck, LuInbox, LuWorkflow, LuClipboard } from "react-icons/lu";
 import { getAllInterviews } from "@/lib/functions/dbActions";
-import { LuClipboard } from "react-icons/lu";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 type InterviewData = {
@@ -26,6 +25,7 @@ const AllInterviews = () => {
   const [interviews, setAllInterviews] = useState<InterviewData[]>([]);
   const [copySuccess, setCopySuccess] = useState<Record<string, boolean>>({});
   const { users } = useUserData();
+
   useEffect(() => {
     if (!users?.[0]?.id) return;
     const load = async () => {
@@ -53,6 +53,7 @@ const AllInterviews = () => {
   console.log("interviews", interviews);
   return (
     <div className="mt-16">
+      {/* TOP SECTION ------------------- */}
       <div className="border border-rose-400 bg-gradient-to-br from-rose-50 via-rose-50 to-rose-300 rounded-md  w-[900px] h-60 mx-auto mt-12 relative overflow-hidden">
         <div className="flex relative h-full">
           {/* Left side */}
@@ -94,22 +95,14 @@ const AllInterviews = () => {
               <Button className="bg-white text-black font-inter text-sm cursor-pointer hover:bg-gray-100">
                 Check Job Listings <LuInbox />
               </Button>
-              {/* <Button className="bg-white text-black font-inter text-sm cursor-pointer hover:bg-gray-100">
-                        Check Courses <LuBookOpenCheck />
-                      </Button> */}
             </div>
-
-            {/* <div className="flex items-center gap-5 mt-5 justify-center">
-                      <Button className="bg-white text-black font-inter text-sm cursor-pointer hover:bg-gray-100">
-                        Go To Career Board <LuWorkflow />
-                      </Button>
-                    </div> */}
           </div>
         </div>
       </div>
 
-      <main className="w-full px-6 mt-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-4">
+      {/* INTERVIEWS GRID ------------------- */}
+      <main className="w-full px-4 sm:px-6 lg:px-10 py-10 bg-gray-50 min-h-screen">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-2">
           {interviews.map((iv) => {
             const createdAt = iv.created_at
               ? new Date(iv.created_at).toLocaleString("en-IN", {
@@ -122,75 +115,94 @@ const AllInterviews = () => {
               : "—";
 
             return (
-              <Card
+              <div
                 key={iv.id}
-                className="shadow-sm hover:shadow-md transition"
+                className="relative p-1 rounded-2xl h-full flex"
+                style={{
+                  backgroundColor: `hsl(${(iv.id * 50) % 360}, 70%, 95%)`,
+                }}
               >
-                <CardHeader className="flex items-start justify-between gap-2">
-                  <div>
-                    <CardTitle className="text-sm font-medium">
-                      {iv.jobTitle}
-                    </CardTitle>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {iv.organization}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col items-end space-y-1">
-                    <span className="text-xs text-muted-foreground">
-                      {createdAt}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-full text-xs bg-slate-100 text-slate-800">
-                        {iv.interviewType}
-                      </span>
-                      <span className="px-2 py-0.5 rounded-full text-xs bg-slate-100 text-slate-800">
-                        {iv.interviewDuration}
+                <Card className="relative z-10 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out border border-gray-100 flex flex-col w-full">
+                  <CardHeader className=" flex-shrink-0">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-xs font-bold flex-shrink-0">
+                          {iv.organization ? iv.organization[0] : "O"}
+                        </div>
+                        <p className="text-xs font-medium text-gray-600 font-inter truncate">
+                          {iv.organization}
+                        </p>
+                      </div>
+                      <span className="text-xs text-gray-400 font-inter whitespace-nowrap">
+                        {createdAt}
                       </span>
                     </div>
-                  </div>
-                </CardHeader>
 
-                <CardContent className="pt-2">
-                  <p className="text-sm text-slate-600 line-clamp-3 mb-3">
-                    {iv.jobDescription}
-                  </p>
+                    <CardTitle className="text-base font-sora font-bold text-gray-900 leading-tight line-clamp-2 mb-2">
+                      {iv.jobTitle}
+                    </CardTitle>
 
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs text-muted-foreground">
-                        Interview ID
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <code className="text-xs font-medium px-2 py-1 bg-slate-50 rounded">
+                    <div className="flex flex-wrap gap-1">
+                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 font-inter whitespace-nowrap">
+                        {(() => {
+                          try {
+                            const types =
+                              typeof iv.interviewType === "string"
+                                ? JSON.parse(iv.interviewType)
+                                : iv.interviewType;
+                            return Array.isArray(types)
+                              ? types.join(", ")
+                              : types;
+                          } catch {
+                            return iv.interviewType;
+                          }
+                        })()}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 font-inter whitespace-nowrap">
+                        {iv.interviewDuration} duration
+                      </span>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="p-3 pt-1 flex-1 flex flex-col">
+                    <p className="text-sm text-gray-700 font-semibold line-clamp-3 mb-2 font-inter leading-relaxed flex-1">
+                      {iv.jobDescription}
+                    </p>
+
+                    <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100 mt-auto">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-gray-400 font-inter mb-1">
+                          Interview ID
+                        </p>
+                        <code className="text-xs font-medium px-2 py-1 bg-gray-50 text-gray-700 rounded font-mono truncate block">
                           {iv.interview_id}
                         </code>
                       </div>
-                    </div>
 
-                    <div className="flex items-center gap-2">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() =>
                           copyToClipboard(iv.interview_id, String(iv.id))
                         }
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-1 text-xs text-blue-600 hover:bg-blue-50 font-inter px-2 py-1 h-auto flex-shrink-0"
                       >
                         {copySuccess[String(iv.id)] ? (
                           <>
-                            <LuCheck /> Copied
+                            <LuCheck className="w-3 h-3" />
+                            <span className="hidden sm:inline">Copied</span>
                           </>
                         ) : (
                           <>
-                            <LuClipboard /> Copy
+                            <LuClipboard className="w-3 h-3" />
+                            <span className="hidden sm:inline">Copy</span>
                           </>
                         )}
                       </Button>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </div>
             );
           })}
         </div>

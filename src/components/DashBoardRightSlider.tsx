@@ -15,7 +15,7 @@ import { LuAlignRight, LuSend, LuStar } from "react-icons/lu";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-// import { runAgent } from "@/lib/AI_Provider/agent";
+import { runAgent } from "@/lib/AI_Provider/agent";
 import { toast } from "sonner";
 import { useTheme } from "@/context/ThemeProvider";
 import { useUserData } from "@/context/UserDetailContext";
@@ -40,42 +40,42 @@ export function SheetDemo() {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // const sendMessage = async () => {
-  //   const content = input.trim();
-  //   if (!content) {
-  //     toast.error("Please enter a message to send.");
-  //     return;
-  //   }
-  //   if (aiLoading || !users) return;
+  const sendMessage = async () => {
+    const content = input.trim();
+    if (!content) {
+      toast.error("Please enter a message to send.");
+      return;
+    }
+    if (aiLoading || !users) return;
 
-  //   setAiLoading(true);
-  //   const userMessage: Message = { role: "user", text: input };
-  //   setMessages((prev) => [...prev, userMessage]);
-  //   const userInput = input;
-  //   setInput("");
+    setAiLoading(true);
+    const userMessage: Message = { role: "user", text: input };
+    setMessages((prev) => [...prev, userMessage]);
+    const userInput = input;
+    setInput("");
 
-  //   try {
-  //     const aiReply = await runAgent(userInput, users[0].id);
-  //     // console.log("AI Reply:", aiReply);
-  //     setMessages((prev) => [...prev, { role: "ai", text: aiReply }]);
-  //   } catch (err) {
-  //     console.error(err);
-  //     setMessages((prev) => [
-  //       ...prev,
-  //       { role: "ai", text: "Something went wrong." },
-  //     ]);
-  //     setAiLoading(false);
-  //   } finally {
-  //     setAiLoading(false);
-  //   }
-  // };
+    try {
+      const aiReply = await runAgent(userInput, users[0].id);
+      // console.log("AI Reply:", aiReply);
+      setMessages((prev) => [...prev, { role: "ai", text: aiReply }]);
+    } catch (err) {
+      console.error(err);
+      setMessages((prev) => [
+        ...prev,
+        { role: "ai", text: "Something went wrong." },
+      ]);
+      setAiLoading(false);
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
-  // const handleKeyDown = (e: React.KeyboardEvent) => {
-  //   if (e.key === "Enter" && !e.shiftKey) {
-  //     e.preventDefault();
-  //     sendMessage();
-  //   }
-  // };
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
 
   return (
     <Sheet>
@@ -151,12 +151,12 @@ export function SheetDemo() {
                 placeholder="Write a message"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                // onKeyDown={handleKeyDown}
+                onKeyDown={handleKeyDown}
                 className="bg-black text-gray-200 font-inter text-sm tracking-tight font-medium mt-2 mb-2 h-28 resize-none"
               />
               <Button
                 className="absolute right-2 bottom-2 bg-gray-600"
-                // onClick={sendMessage}
+                onClick={sendMessage}
               >
                 <LuSend className="text-white" size={10} />
               </Button>
