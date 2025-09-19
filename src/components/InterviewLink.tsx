@@ -40,6 +40,17 @@ const InterviewLink = () => {
   useEffect(() => {
     fetchLatestInterview();
   }, []);
+
+  const link = interviewData
+    ? `${process.env.NEXT_PUBLIC_HOST_URL}/${interviewData.interview_id}`
+    : "";
+
+  const handleWhatsapp = () => {
+    if (!link) return;
+    const message = `Here is your interview link: ${link}`;
+    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank"); // open WhatsApp in new tab/app
+  };  
   // console.log("interviewData", interviewData);
 
   return (
@@ -64,16 +75,16 @@ const InterviewLink = () => {
         </div>
         <div className="flex items-center justify-between gap-20 mt-5">
           <Input
-            // value={
-            //   interviewData
-            //     ? `${process.env.NEXT_PUBLIC_HOST_URL}/${interviewData.interview_id}`
-            //     : "Loading..."
-            // }
             value={
               interviewData
-                ? `https://ai-voice-app-five.vercel.app/interview/${interviewData.interview_id}`
+                ? `${process.env.NEXT_PUBLIC_HOST_URL}/${interviewData.interview_id}`
                 : "Loading..."
             }
+            // value={
+            //   interviewData
+            //     ? `https://ai-voice-app-five.vercel.app/interview/${interviewData.interview_id}`
+            //     : "Loading..."
+            // }
             readOnly
             className="bg-slate-100 text-black cursor-pointer"
           />
@@ -107,7 +118,7 @@ const InterviewLink = () => {
           Share Through
         </h2>
         <div className="grid grid-cols-3 gap-5 max-w-[600px] mx-auto mt-6">
-          <Button variant={"outline"} className=" mt-2">
+          <Button variant={"outline"} className=" mt-2 cursor-pointer"   onClick={handleWhatsapp}>
             <LuSend className="mr-2" />
             Watsapp
           </Button>

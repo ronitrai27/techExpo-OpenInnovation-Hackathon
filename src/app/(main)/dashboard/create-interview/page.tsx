@@ -151,9 +151,9 @@ const CreateInterview = () => {
               onCreateLink={(interview_id) => onCreateLink(interview_id)}
             />
           )}
-          {/* {step === 3 && (
+          {step === 3 && (
             <InterviewLink  />
-          )} */}
+          )}
         </div>
       </div>
     </div>
