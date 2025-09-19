@@ -41,8 +41,11 @@ const InterviewLink = () => {
     fetchLatestInterview();
   }, []);
 
+  // const link = interviewData
+  //   ? `${process.env.NEXT_PUBLIC_HOST_URL}/${interviewData.interview_id}`
+  //   : "";
   const link = interviewData
-    ? `${process.env.NEXT_PUBLIC_HOST_URL}/${interviewData.interview_id}`
+    ? `https://www.vocalx.xyz/interview/${interviewData.interview_id}`
     : "";
 
   const handleWhatsapp = () => {
@@ -50,7 +53,7 @@ const InterviewLink = () => {
     const message = `Here is your interview link: ${link}`;
     const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank"); // open WhatsApp in new tab/app
-  };  
+  };
   // console.log("interviewData", interviewData);
 
   return (
@@ -118,7 +121,11 @@ const InterviewLink = () => {
           Share Through
         </h2>
         <div className="grid grid-cols-3 gap-5 max-w-[600px] mx-auto mt-6">
-          <Button variant={"outline"} className=" mt-2 cursor-pointer"   onClick={handleWhatsapp}>
+          <Button
+            variant={"outline"}
+            className=" mt-2 cursor-pointer"
+            onClick={handleWhatsapp}
+          >
             <LuSend className="mr-2" />
             Watsapp
           </Button>
