@@ -7,21 +7,8 @@ import { supabase } from "@/services/supabaseClient";
 import { toast } from "react-hot-toast";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { Button } from "@/components/ui/button";
+import { AnimatedGradientTextDemo } from "@/components/AnimatedText";
 const Login = () => {
-  // const handleLogin = async (provider: "google" | "discord") => {
-  //   const { error } = await supabase.auth.signInWithOAuth({
-  //     provider,
-  //     options: {
-  //       redirectTo: `${window.location.origin}/auth/callback`,
-  //     },
-  //   });
-
-  //   if (error) {
-  //     console.error("Login error:", error.message);
-  //     toast.error(error.message);
-  //   }
-  // };
-
   const handleLogin = async (provider: "google" | "discord") => {
     const redirectUrl = process.env.NEXT_PUBLIC_SITE_URL + "/auth/callback";
 
@@ -61,10 +48,13 @@ const Login = () => {
       {/* Content */}
       {/* animate-moving-gradient */}
       <div className="flex flex-col items-center justify-center relative z-10 ">
-        <div className="text-sm px-6 text-gray-800 font-medium flex items-center justify-center gap-3 py-1 border-2 border-yellow-500 rounded-full mb-20 ">
+        {/* <div className="text-sm px-6 text-gray-800 font-medium flex items-center justify-center gap-3 py-1 border-2 border-yellow-500 rounded-full mb-20 ">
           Try it for Free{" "}
           <BsStars className="inline-flex text-yellow-400 text-xl" />
-        </div>
+        </div> */}
+       <div className="mb-20">
+         <AnimatedGradientTextDemo/>
+       </div>
 
         <h1 className="font-extrabold text-5xl md:text-6xl font-sora tracking-tight mb-3">
           VOCALX
