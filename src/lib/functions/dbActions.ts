@@ -10,6 +10,7 @@ type InterviewData = {
   interviewDuration: string;
   interviewType: string;
   acceptResume: boolean;
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   questionList: any; // JSON structure
   userEmail: string;
   organization: string;

@@ -38,7 +38,9 @@ const DashBoardOptions = () => {
       toast.success("Email sent successfully!");
       setTo("");
       setText("");
-    } catch (err: any) {
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     catch (err: any) {
       setMessage("❌ " + err.message);
     } finally {
       setLoading(false);
