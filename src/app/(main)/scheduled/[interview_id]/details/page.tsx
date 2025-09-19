@@ -472,10 +472,10 @@ export default function InterviewDetailsPage() {
 
                 <Button
                   variant="outline"
-                  disabled={loading}
+                  disabled={loadingMail}
                   onClick={handleSend}
                 >
-                  {loading ? "Sending..." : "Send Mail"}{" "}
+                  {loadingMail ? "Sending..." : "Send Mail"}{" "}
                   <LuSend className="ml-2" />
                 </Button>
               </div>
