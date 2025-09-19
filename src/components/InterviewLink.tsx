@@ -75,16 +75,16 @@ const InterviewLink = () => {
         </div>
         <div className="flex items-center justify-between gap-20 mt-5">
           <Input
-            value={
-              interviewData
-                ? `${process.env.NEXT_PUBLIC_HOST_URL}/${interviewData.interview_id}`
-                : "Loading..."
-            }
             // value={
             //   interviewData
-            //     ? `https://ai-voice-app-five.vercel.app/interview/${interviewData.interview_id}`
+            //     ? `${process.env.NEXT_PUBLIC_HOST_URL}/${interviewData.interview_id}`
             //     : "Loading..."
             // }
+            value={
+              interviewData
+                ? `https://vocalx.xyz/interview/${interviewData.interview_id}`
+                : "Loading..."
+            }
             readOnly
             className="bg-slate-100 text-black cursor-pointer"
           />
