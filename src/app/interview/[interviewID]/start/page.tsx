@@ -73,9 +73,9 @@ const StartInterview = () => {
 
   const [vapi] = useState(() => new Vapi(VAPI_PUBLIC_KEY));
 
-  // useEffect(() => {
-  //   interviewInfo && startCall();
-  // }, [interviewInfo]);
+  useEffect(() => {
+    interviewInfo && startCall();
+  }, [interviewInfo]);
 
   const startCall = async () => {
     let questionList = "";
